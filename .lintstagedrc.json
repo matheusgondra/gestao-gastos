@@ -1,0 +1,6 @@
+{
+	"*.ts": [
+		"pnpm format",
+		"pnpm test:staged"
+	]
+}
