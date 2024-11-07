@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { SignUpController } from "../../../src/application/controllers/sign-up.controller";
 import { SignUpRequestDTO } from "../../../src/application/dto/sign-up-request.dto";
 import { AddAccount } from "../../../src/domain/use-cases/add-account";
-import { ConflictException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException } from "@nestjs/common";
 
 describe("SignUpController", () => {
 	let sut: SignUpController;
@@ -39,10 +39,17 @@ describe("SignUpController", () => {
 	});
 
 	it("should return 409 if AddAccount returns null", async () => {
-		jest.spyOn(addAccountStub, "add").mockReturnValueOnce(Promise.resolve(null));
+		jest.spyOn(addAccountStub, "add").mockResolvedValueOnce(null);
 		const promise = sut.handle(signUpRequestDTO);
 
-		expect(promise).rejects.toBeInstanceOf(ConflictException);
-		expect(promise).rejects.toThrow("Account already exists");
+		await expect(promise).rejects.toBeInstanceOf(ConflictException);
+		await expect(promise).rejects.toThrow("Account already exists");
+	});
+
+	it("should return 500 if AddAccount throws", async () => {
+		jest.spyOn(addAccountStub, "add").mockRejectedValueOnce(new Error());
+		const promise = sut.handle(signUpRequestDTO);
+
+		await expect(promise).rejects.toThrow(InternalServerErrorException);
 	});
 });
