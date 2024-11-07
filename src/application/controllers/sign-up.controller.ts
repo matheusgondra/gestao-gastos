@@ -1,5 +1,5 @@
+import { AddAccount } from "@/domain/use-cases/add-account";
 import { ConflictException, Inject, InternalServerErrorException } from "@nestjs/common";
-import { AddAccount } from "src/domain/use-cases/add-account";
 import { SignUpRequestDTO } from "../dto/sign-up-request.dto";
 import { Controller } from "../protocols/controller";
 

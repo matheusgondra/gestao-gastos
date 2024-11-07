@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { SignUpController } from "../../../src/application/controllers/sign-up.controller";
-import { SignUpRequestDTO } from "../../../src/application/dto/sign-up-request.dto";
-import { AddAccount } from "../../../src/domain/use-cases/add-account";
+import { SignUpController } from "@/application/controllers/sign-up.controller";
+import { SignUpRequestDTO } from "@/application/dto/sign-up-request.dto";
+import { AddAccount } from "@/domain/use-cases/add-account";
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignUpController", () => {
 	let sut: SignUpController;
