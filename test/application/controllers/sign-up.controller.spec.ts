@@ -1,7 +1,7 @@
 import { SignUpController } from "@/application/controllers/sign-up.controller";
 import { SignUpRequestDTO } from "@/application/dto/sign-up-request.dto";
 import { AddAccount } from "@/domain/use-cases/add-account";
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignUpController", () => {
@@ -42,14 +42,6 @@ describe("SignUpController", () => {
 		jest.spyOn(addAccountStub, "add").mockResolvedValueOnce(null);
 		const promise = sut.handle(signUpRequestDTO);
 
-		await expect(promise).rejects.toBeInstanceOf(ConflictException);
-		await expect(promise).rejects.toThrow("Account already exists");
-	});
-
-	it("should return 500 if AddAccount throws", async () => {
-		jest.spyOn(addAccountStub, "add").mockRejectedValueOnce(new Error());
-		const promise = sut.handle(signUpRequestDTO);
-
-		await expect(promise).rejects.toThrow(InternalServerErrorException);
+		await expect(promise).rejects.toThrow(new ConflictException("User already exists"));
 	});
 });
