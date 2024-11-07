@@ -9,6 +9,4 @@ export interface AddAccountParams {
 	password: string;
 }
 
-export interface AddAccountResult {
-	message: string;
-}
+export type AddAccountResult = { message: string } | null;
