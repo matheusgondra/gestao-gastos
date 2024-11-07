@@ -2,10 +2,11 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { SignUpController } from "../../../src/application/controllers/sign-up.controller";
 import { SignUpRequestDTO } from "../../../src/application/dto/sign-up-request.dto";
 import { AddAccount } from "../../../src/domain/use-cases/add-account";
+import { ConflictException } from "@nestjs/common";
 
 describe("SignUpController", () => {
 	let sut: SignUpController;
-	let addAccountStub: jest.Mocked<AddAccount>;
+	let addAccountStub: AddAccount;
 	const signUpRequestDTO: SignUpRequestDTO = {
 		firstName: "any_first_name",
 		lastName: "any_last_name",
@@ -35,5 +36,13 @@ describe("SignUpController", () => {
 		await sut.handle(signUpRequestDTO);
 
 		expect(addSpy).toHaveBeenCalledWith(signUpRequestDTO);
+	});
+
+	it("should return 409 if AddAccount returns null", async () => {
+		jest.spyOn(addAccountStub, "add").mockReturnValueOnce(Promise.resolve(null));
+		const promise = sut.handle(signUpRequestDTO);
+
+		expect(promise).rejects.toBeInstanceOf(ConflictException);
+		expect(promise).rejects.toThrow("Account already exists");
 	});
 });
