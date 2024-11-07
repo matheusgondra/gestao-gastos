@@ -1,5 +1,5 @@
 import { SignUpController } from "@/application/controllers/sign-up.controller";
-import { SignUpRequestDTO } from "@/application/dto/sign-up-request.dto";
+import { SignUpRequestDTO, SignUpResponseDTO } from "@/application/dto";
 import { AddAccount } from "@/domain/use-cases/add-account";
 import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -43,5 +43,11 @@ describe("SignUpController", () => {
 		const promise = sut.handle(signUpRequestDTO);
 
 		await expect(promise).rejects.toThrow(new ConflictException("User already exists"));
+	});
+
+	it("should return a message on success", async () => {
+		const httpResponse = await sut.handle(signUpRequestDTO);
+
+		expect(httpResponse).toEqual(new SignUpResponseDTO("Account created successfully"));
 	});
 });
