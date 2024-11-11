@@ -1,15 +1,17 @@
 import { AddAccount } from "@/domain/use-cases/add-account";
-import { ConflictException, Inject } from "@nestjs/common";
+import { Body, ConflictException, Controller, Inject, Post } from "@nestjs/common";
 import { HttpController } from "../protocols/controller";
 import { SignUpRequestDTO, SignUpResponseDTO } from "../dto";
 
+@Controller("signup")
 export class SignUpController implements HttpController<SignUpRequestDTO, SignUpResponseDTO> {
 	constructor(
 		@Inject("AddAccount")
 		private readonly addAccount: AddAccount
 	) {}
 
-	async handle(request: SignUpRequestDTO): Promise<SignUpResponseDTO> {
+	@Post()
+	async handle(@Body() request: SignUpRequestDTO): Promise<SignUpResponseDTO> {
 		const user = await this.addAccount.add(request);
 		if (!user) {
 			throw new ConflictException("User already exists");
