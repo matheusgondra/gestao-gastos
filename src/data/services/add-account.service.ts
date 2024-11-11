@@ -19,6 +19,6 @@ export class AddAccountService implements AddAccount {
 			return null;
 		}
 
-		return null;
+		return { message: "Account created successfully" };
 	}
 }
