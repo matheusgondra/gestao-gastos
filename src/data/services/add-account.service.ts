@@ -13,8 +13,12 @@ export class AddAccountService implements AddAccount {
 	) {}
 
 	async add(accountData: AddAccountParams): Promise<AddAccountResult> {
-		await this.hashGenerator.hash(accountData.password);
-		await this.addAccountRepository.add(accountData);
+		const hashedPassword = await this.hashGenerator.hash(accountData.password);
+		const account = await this.addAccountRepository.add(Object.assign({}, accountData, { password: hashedPassword }));
+		if (!account) {
+			return null;
+		}
+
 		return null;
 	}
 }
