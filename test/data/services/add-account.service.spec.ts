@@ -66,4 +66,11 @@ describe("AddAccountService", () => {
 
 		expect(hashSpy).toHaveBeenCalledWith(fakeAccountData.password);
 	});
+
+	it("should throw if HashGenerator throws", async () => {
+		jest.spyOn(hashGeneratorStub, "hash").mockRejectedValueOnce(new Error());
+		const promise = sut.add(fakeAccountData);
+
+		await expect(promise).rejects.toThrow();
+	});
 });
