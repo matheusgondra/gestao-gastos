@@ -19,7 +19,7 @@ describe("AddAccountService", () => {
 		firstName: "any_first_name",
 		lastName: "any_last_name",
 		email: "any_email",
-		password: "any_password"
+		password: "hashed_password"
 	};
 
 	beforeEach(async () => {
@@ -58,6 +58,13 @@ describe("AddAccountService", () => {
 		const promise = sut.add(fakeAccountData);
 
 		await expect(promise).rejects.toThrow();
+	});
+
+	it("should return null if AddAccountRepository returns null", async () => {
+		jest.spyOn(addAccountRepositoryStub, "add").mockResolvedValueOnce(null);
+		const account = await sut.add(fakeAccountData);
+
+		expect(account).toBeNull();
 	});
 
 	it("should call HashGenerator with correct password", async () => {
