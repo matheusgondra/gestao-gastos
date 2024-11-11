@@ -15,5 +15,11 @@ export class UserRepository implements AddAccountRepository {
 		if (user) {
 			return null;
 		}
+
+		const newUser = await this.database.user.create({
+			data: account
+		});
+
+		return newUser;
 	}
 }
