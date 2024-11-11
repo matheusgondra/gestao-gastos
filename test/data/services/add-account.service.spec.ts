@@ -44,4 +44,11 @@ describe("AddAccountService", () => {
 
 		expect(addSpy).toHaveBeenCalledWith(fakeAccountData);
 	});
+
+	it("should throw if AddAccountRepository throws", async () => {
+		jest.spyOn(addAccountRepositoryStub, "add").mockRejectedValueOnce(new Error());
+		const promise = sut.add(fakeAccountData);
+
+		await expect(promise).rejects.toThrow();
+	});
 });
