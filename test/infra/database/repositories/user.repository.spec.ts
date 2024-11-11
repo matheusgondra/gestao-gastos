@@ -4,6 +4,7 @@ import { Test } from "@nestjs/testing";
 
 describe("UserRepository", () => {
 	let sut: UserRepository;
+	let prismaServiceStub: PrismaService;
 	const fakeAccountData = {
 		firstName: "any_first_name",
 		lastName: "any_last_name",
@@ -16,8 +17,8 @@ describe("UserRepository", () => {
 		lastName: "any_last_name",
 		email: "any_email",
 		password: "hashed_password",
-		createdAt: "any_date",
-		updatedAt: "any_date"
+		createdAt: new Date(),
+		updatedAt: new Date()
 	};
 
 	beforeEach(async () => {
@@ -28,7 +29,8 @@ describe("UserRepository", () => {
 					provide: PrismaService,
 					useValue: {
 						user: {
-							findUnique: jest.fn().mockReturnValue(fakeUser)
+							findUnique: jest.fn().mockReturnValue(null),
+							create: jest.fn().mockReturnValue(fakeUser)
 						}
 					}
 				}
@@ -36,11 +38,19 @@ describe("UserRepository", () => {
 		}).compile();
 
 		sut = module.get(UserRepository);
+		prismaServiceStub = module.get(PrismaService);
 	});
 
 	it("should return null if user already exists", async () => {
+		jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValueOnce(fakeUser);
 		const result = await sut.add(fakeAccountData);
 
 		expect(result).toBeNull();
+	});
+
+	it("should return an user on success", async () => {
+		const result = await sut.add(fakeAccountData);
+
+		expect(result).toEqual(fakeUser);
 	});
 });
