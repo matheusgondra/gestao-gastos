@@ -1,10 +1,11 @@
-import { AddAccountRepository } from "@/data/protocols";
+import { AddAccountRepository, HashGenerator } from "@/data/protocols";
 import { AddAccountService } from "@/data/services/add-account.service";
 import { Test } from "@nestjs/testing";
 
 describe("AddAccountService", () => {
 	let sut: AddAccountService;
 	let addAccountRepositoryStub: AddAccountRepository;
+	let hashGeneratorStub: HashGenerator;
 	const fakeAccount = {
 		id: "any_id",
 		firstName: "any_first_name",
@@ -24,18 +25,25 @@ describe("AddAccountService", () => {
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
 			providers: [
+				AddAccountService,
 				{
 					provide: "AddAccountRepository",
 					useValue: {
 						add: jest.fn().mockResolvedValue(fakeAccount)
 					}
 				},
-				AddAccountService
+				{
+					provide: "HashGenerator",
+					useValue: {
+						hash: jest.fn().mockResolvedValue("hashed_password")
+					}
+				}
 			]
 		}).compile();
 
 		sut = module.get(AddAccountService);
 		addAccountRepositoryStub = module.get("AddAccountRepository");
+		hashGeneratorStub = module.get("HashGenerator");
 	});
 
 	it("should call AddAccountRepository with correct params", async () => {
@@ -50,5 +58,12 @@ describe("AddAccountService", () => {
 		const promise = sut.add(fakeAccountData);
 
 		await expect(promise).rejects.toThrow();
+	});
+
+	it("should call HashGenerator with correct password", async () => {
+		const hashSpy = jest.spyOn(hashGeneratorStub, "hash");
+		await sut.add(fakeAccountData);
+
+		expect(hashSpy).toHaveBeenCalledWith(fakeAccountData.password);
 	});
 });
