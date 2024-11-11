@@ -27,4 +27,10 @@ describe("Bcrypt Adapter", () => {
 
 		expect(hashSpy).toHaveBeenCalledWith("any_value", 12);
 	});
+
+	it("should return a hashed value on hash success", async () => {
+		const hash = await sut.hash("any_value");
+
+		expect(hash).toBe("hashed_value");
+	});
 });
