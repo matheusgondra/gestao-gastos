@@ -80,4 +80,10 @@ describe("AddAccountService", () => {
 
 		await expect(promise).rejects.toThrow();
 	});
+
+	it("should return a message on success", async () => {
+		const response = await sut.add(fakeAccountData);
+
+		expect(response).toEqual({ message: "Account created successfully" });
+	});
 });
