@@ -27,6 +27,7 @@
 		"@nestjs/common": "^10.0.0",
 		"@nestjs/core": "^10.0.0",
 		"@nestjs/platform-express": "^10.0.0",
+		"@prisma/client": "5.22.0",
 		"module-alias": "^2.2.3",
 		"reflect-metadata": "^0.2.0",
 		"rxjs": "^7.8.1"
@@ -63,5 +64,8 @@
 	"_moduleAliases": {
 		"@/": "dist",
 		"@test/": "test"
+	},
+	"prisma": {
+		"schema": "./src/infra/database/prisma/schema.prisma"
 	}
 }
