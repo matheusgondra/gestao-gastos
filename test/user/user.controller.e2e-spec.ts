@@ -1,19 +1,28 @@
-import { SignUpController } from "@/application/controllers/sign-up.controller";
-import { DataModule } from "@/data/data.module";
-import { DatabaseModule } from "@/infra/database/database.module";
-import { PrismaService } from "@/infra/database/prisma/prisma.service";
+import { AdapterModule } from "@/adapter/adapter.module";
+import { DatabaseModule } from "@/database/database.module";
+import { PrismaService } from "@/database/prisma/prisma.service";
+import { UserController } from "@/user/user.controller";
+import { UserModule } from "@/user/user.module";
+import { UserService } from "@/user/user.service";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import * as request from "supertest";
 
-describe("Sign Up Controller (E2E)", () => {
+describe("User Controller (E2E)", () => {
 	let app: INestApplication;
 	let prismaService: PrismaService;
 
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
-			controllers: [SignUpController],
-			imports: [DatabaseModule, DataModule]
+			controllers: [UserController],
+			imports: [
+				ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
+				DatabaseModule,
+				UserModule,
+				AdapterModule
+			],
+			providers: [UserService]
 		}).compile();
 
 		prismaService = module.get<PrismaService>(PrismaService);
@@ -37,7 +46,7 @@ describe("Sign Up Controller (E2E)", () => {
 
 	it("should return 201 on success", async () => {
 		return request(app.getHttpServer())
-			.post("/signup")
+			.post("/user/signup")
 			.send({
 				firstName: "John",
 				lastName: "Doe",
