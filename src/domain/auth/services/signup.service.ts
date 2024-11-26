@@ -1,17 +1,17 @@
-import { Injectable } from "@nestjs/common";
-import { UserDto } from "./dto/user.dto";
-import { User } from "./entities/user.entity";
-import { UserRepository } from "@/infra/database/repositories/user.repository";
+import { User } from "@/domain/user/entities/user.entity";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
+import { UserRepository } from "@/infra/database/repositories/user.repository";
+import { Injectable } from "@nestjs/common";
+import { SignUpRequestDTO } from "../dto";
 
 @Injectable()
-export class UserService {
+export class SignUpService {
 	constructor(
 		private readonly database: UserRepository,
 		private readonly hashService: BCryptAdapter
 	) {}
 
-	async add(data: UserDto): Promise<User> {
+	async execute(data: SignUpRequestDTO): Promise<User> {
 		const hashedPassword = await this.hashService.hashGenerator(data.password);
 		const user = this.database.add(Object.assign({}, data, { password: hashedPassword }));
 		return user;
