@@ -5,4 +5,4 @@ import { BCryptAdapter } from "./bcrypt.adapter";
 	providers: [BCryptAdapter],
 	exports: [BCryptAdapter]
 })
-export class AdapterModule {}
+export class CryptographyModule {}

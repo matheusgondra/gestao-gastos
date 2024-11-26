@@ -71,6 +71,6 @@
 		"@test/": "test"
 	},
 	"prisma": {
-		"schema": "./src/database/prisma/schema.prisma"
+		"schema": "./src/infra/database/prisma/schema.prisma"
 	}
 }

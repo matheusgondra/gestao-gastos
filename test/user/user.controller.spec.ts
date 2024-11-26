@@ -1,6 +1,6 @@
-import { SignUpRequestDTO, SignUpResponseDTO } from "@/user/dto";
-import { UserController } from "@/user/user.controller";
-import { UserService } from "@/user/user.service";
+import { SignUpRequestDTO, SignUpResponseDTO } from "@/domain/user/dto";
+import { UserController } from "@/domain/user/user.controller";
+import { UserService } from "@/domain/user/user.service";
 import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 

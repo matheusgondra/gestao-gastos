@@ -1,6 +1,6 @@
-import { BCryptAdapter } from "@/adapter/bcrypt.adapter";
-import { UserRepository } from "@/database/repositories/user.repository";
-import { UserService } from "@/user/user.service";
+import { UserService } from "@/domain/user/user.service";
+import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
+import { UserRepository } from "@/infra/database/repositories/user.repository";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("UserService", () => {

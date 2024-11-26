@@ -1,9 +1,9 @@
-import { AdapterModule } from "@/adapter/adapter.module";
-import { DatabaseModule } from "@/database/database.module";
-import { PrismaService } from "@/database/prisma/prisma.service";
-import { UserController } from "@/user/user.controller";
-import { UserModule } from "@/user/user.module";
-import { UserService } from "@/user/user.service";
+import { UserController } from "@/domain/user/user.controller";
+import { UserModule } from "@/domain/user/user.module";
+import { UserService } from "@/domain/user/user.service";
+import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
+import { DatabaseModule } from "@/infra/database/database.module";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
@@ -20,7 +20,7 @@ describe("User Controller (E2E)", () => {
 				ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
 				DatabaseModule,
 				UserModule,
-				AdapterModule
+				CryptographyModule
 			],
 			providers: [UserService]
 		}).compile();
