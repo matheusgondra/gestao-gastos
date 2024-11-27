@@ -60,4 +60,10 @@ describe("Signup Service", () => {
 		const promise = sut.execute(fakeUserData);
 		await expect(promise).rejects.toThrow();
 	});
+
+	it("should return null if database returns null", async () => {
+		jest.spyOn(databaseStub, "add").mockResolvedValueOnce(null);
+		const account = await sut.execute(fakeUserData);
+		expect(account).toBeNull();
+	});
 });
