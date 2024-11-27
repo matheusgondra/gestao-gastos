@@ -54,4 +54,10 @@ describe("Signup Service", () => {
 		await sut.execute(fakeUserData);
 		expect(addSpy).toHaveBeenCalledWith(fakeUserData);
 	});
+
+	it("should throw if database throws", async () => {
+		jest.spyOn(databaseStub, "add").mockRejectedValueOnce(new Error());
+		const promise = sut.execute(fakeUserData);
+		await expect(promise).rejects.toThrow();
+	});
 });
