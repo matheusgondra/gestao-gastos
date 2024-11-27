@@ -1,6 +1,7 @@
 import { SignUpController } from "@/domain/auth/controllers/signup.controller";
 import { SignUpRequestDTO } from "@/domain/auth/dto";
 import { SignUpService } from "@/domain/auth/services/signup.service";
+import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignUp Controller", () => {
@@ -35,5 +36,11 @@ describe("SignUp Controller", () => {
 		const executeSpy = jest.spyOn(signupServiceStub, "execute");
 		await sut.handle(signUpRequestDTO);
 		expect(executeSpy).toHaveBeenCalledWith(signUpRequestDTO);
+	});
+
+	it("should return 409 if execute returns null", async () => {
+		jest.spyOn(signupServiceStub, "execute").mockResolvedValueOnce(null);
+		const promise = sut.handle(signUpRequestDTO);
+		await expect(promise).rejects.toThrow(new ConflictException("User already exists"));
 	});
 });
