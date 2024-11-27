@@ -58,9 +58,14 @@ describe("UserRepository", () => {
 
 	describe("LoadUserByEmail method", () => {
 		it("should return null if user is not found", async () => {
-			jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValueOnce(null);
 			const result = await sut.loadUserByEmail(fakeUserData.email);
 			expect(result).toBeNull();
+		});
+
+		it("should return an user on success", async () => {
+			jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValue(fakeUser);
+			const result = await sut.loadUserByEmail(fakeUserData.email);
+			expect(result).toEqual(fakeUser);
 		});
 	});
 });
