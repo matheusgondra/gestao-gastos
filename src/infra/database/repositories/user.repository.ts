@@ -15,8 +15,21 @@ export class UserRepository {
 		return user;
 	}
 
-	async loadUserByEmail(email: string): Promise<User> {
+	async loadUserByEmail(email: string): Promise<UserResult> {
 		const user = await this.database.user.findUnique({ where: { email } });
+		if (!user) {
+			return null;
+		}
 		return user;
 	}
+}
+
+export interface UserResult {
+	id: string;
+	firstName: string;
+	lastName: string;
+	password: string;
+	email: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
