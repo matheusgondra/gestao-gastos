@@ -5,7 +5,7 @@ import { Test } from "@nestjs/testing";
 describe("UserRepository", () => {
 	let sut: UserRepository;
 	let prismaServiceStub: PrismaService;
-	const fakeAccountData = {
+	const fakeUserData = {
 		firstName: "any_first_name",
 		lastName: "any_last_name",
 		email: "any_email",
@@ -41,16 +41,26 @@ describe("UserRepository", () => {
 		prismaServiceStub = module.get(PrismaService);
 	});
 
-	it("should return null if user already exists", async () => {
-		jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValueOnce(fakeUser);
-		const result = await sut.add(fakeAccountData);
+	describe("Add method", () => {
+		it("should return null if user already exists", async () => {
+			jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValueOnce(fakeUser);
+			const result = await sut.add(fakeUserData);
 
-		expect(result).toBeNull();
+			expect(result).toBeNull();
+		});
+
+		it("should return an user on success", async () => {
+			const result = await sut.add(fakeUserData);
+
+			expect(result).toEqual(fakeUser);
+		});
 	});
 
-	it("should return an user on success", async () => {
-		const result = await sut.add(fakeAccountData);
-
-		expect(result).toEqual(fakeUser);
+	describe("LoadUserByEmail method", () => {
+		it("should return null if user is not found", async () => {
+			jest.spyOn(prismaServiceStub.user, "findUnique").mockResolvedValueOnce(null);
+			const result = await sut.loadUserByEmail(fakeUserData.email);
+			expect(result).toBeNull();
+		});
 	});
 });
