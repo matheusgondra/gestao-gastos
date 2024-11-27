@@ -66,4 +66,10 @@ describe("Signup Service", () => {
 		const account = await sut.execute(fakeUserData);
 		expect(account).toBeNull();
 	});
+
+	it("should call hashService with correct param", async () => {
+		const spyHashService = jest.spyOn(hashServiceStub, "hashGenerator");
+		await sut.execute(fakeUserData);
+		expect(spyHashService).toHaveBeenCalledWith(fakeUserData.password);
+	});
 });
