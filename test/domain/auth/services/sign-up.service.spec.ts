@@ -72,4 +72,10 @@ describe("Signup Service", () => {
 		await sut.execute(fakeUserData);
 		expect(spyHashService).toHaveBeenCalledWith(fakeUserData.password);
 	});
+
+	it("should throw if hashService throws", async () => {
+		jest.spyOn(hashServiceStub, "hashGenerator").mockRejectedValueOnce(new Error());
+		const promise = sut.execute(fakeUserData);
+		await expect(promise).rejects.toThrow();
+	});
 });
