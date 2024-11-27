@@ -61,4 +61,10 @@ describe("SignInService", () => {
 		await sut.execute(signInData);
 		expect(loadSpy).toHaveBeenCalledWith(signInData.email);
 	});
+
+	it("should throws if loadUserByEmail throws", async () => {
+		jest.spyOn(databaseStub, "loadUserByEmail").mockRejectedValue(new Error());
+		const promise = sut.execute(signInData);
+		await expect(promise).rejects.toThrow();
+	});
 });
