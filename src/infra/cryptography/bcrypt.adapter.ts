@@ -1,12 +1,13 @@
-import { HashGenerator } from "@/data/protocols";
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
-export class BCryptAdapter implements HashGenerator {
-	private readonly salt = 12;
+export class BCryptAdapter {
+	constructor(private readonly configService: ConfigService) {}
 
-	async hash(value: string): Promise<string> {
-		return bcrypt.hash(value, this.salt);
+	async hashGenerator(value: string): Promise<string> {
+		const salt = this.configService.get<number>("SALT");
+		return bcrypt.hash(value, Number(salt));
 	}
 }

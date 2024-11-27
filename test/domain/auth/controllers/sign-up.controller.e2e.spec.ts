@@ -1,8 +1,11 @@
-import { SignUpController } from "@/application/controllers/sign-up.controller";
-import { DataModule } from "@/data/data.module";
+import { AuthModule } from "@/domain/auth/auth.module";
+import { SignUpController } from "@/domain/auth/controllers/signup.controller";
+import { SignUpService } from "@/domain/auth/services/signup.service";
+import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import * as request from "supertest";
 
@@ -13,7 +16,13 @@ describe("Sign Up Controller (E2E)", () => {
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
 			controllers: [SignUpController],
-			imports: [DatabaseModule, DataModule]
+			imports: [
+				ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
+				DatabaseModule,
+				AuthModule,
+				CryptographyModule
+			],
+			providers: [SignUpService]
 		}).compile();
 
 		prismaService = module.get<PrismaService>(PrismaService);

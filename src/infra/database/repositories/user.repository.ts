@@ -1,25 +1,21 @@
-import { AddAccountRepository, AddAccountRepositoryParams, AddAccountRepositoryResult } from "@/data/protocols";
+import { User } from "@/domain/user/entities/user.entity";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
-export class UserRepository implements AddAccountRepository {
+export class UserRepository {
 	constructor(private readonly database: PrismaService) {}
 
-	async add(account: AddAccountRepositoryParams): Promise<AddAccountRepositoryResult> {
-		const user = await this.database.user.findUnique({
+	async add(data: User): Promise<User> {
+		const userAlreadyExists = await this.database.user.findUnique({
 			where: {
-				email: account.email
+				email: data.email
 			}
 		});
-		if (user) {
+		if (userAlreadyExists) {
 			return null;
 		}
-
-		const newUser = await this.database.user.create({
-			data: account
-		});
-
-		return newUser;
+		const user = await this.database.user.create({ data });
+		return user;
 	}
 }
