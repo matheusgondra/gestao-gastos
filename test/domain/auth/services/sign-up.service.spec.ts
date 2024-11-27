@@ -78,4 +78,9 @@ describe("Signup Service", () => {
 		const promise = sut.execute(fakeUserData);
 		await expect(promise).rejects.toThrow();
 	});
+
+	it("should return a user on success", async () => {
+		const httpResponse = await sut.execute(fakeUserData);
+		expect(httpResponse).toEqual(fakeUser);
+	});
 });
