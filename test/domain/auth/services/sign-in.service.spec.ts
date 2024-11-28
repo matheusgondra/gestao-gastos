@@ -85,4 +85,10 @@ describe("SignInService", () => {
 		const result = await sut.execute(signInData);
 		expect(result).toBeNull();
 	});
+
+	it("should call signAsync with correct param", async () => {
+		const spySignAsync = jest.spyOn(tokenServiceStub, "signAsync");
+		await sut.execute(signInData);
+		expect(spySignAsync).toHaveBeenCalledWith({ userId: fakeUser.id });
+	});
 });
