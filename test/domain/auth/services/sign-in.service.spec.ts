@@ -67,4 +67,10 @@ describe("SignInService", () => {
 		const promise = sut.execute(signInData);
 		await expect(promise).rejects.toThrow();
 	});
+
+	it("should return null if loadUserByEmail find a user", async () => {
+		jest.spyOn(databaseStub, "loadUserByEmail").mockResolvedValueOnce(null);
+		const result = await sut.execute(signInData);
+		expect(result).toBeNull();
+	});
 });
