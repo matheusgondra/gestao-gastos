@@ -1,6 +1,6 @@
 import { SignInService } from "@/domain/auth/services/signin.service";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
-import { UserRepository } from "@/infra/database/repositories/user.repository";
+import { UserRepository, UserResult } from "@/infra/database/repositories/user.repository";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 
@@ -10,14 +10,14 @@ describe("SignInService", () => {
 	let hashServiceStub: BCryptAdapter;
 	let tokenServiceStub: JwtService;
 
-	const fakeUser = {
+	const fakeUser: UserResult = {
 		id: "any_id",
 		firstName: "any_first_name",
 		lastName: "any_last_name",
 		email: "any_email",
 		password: "any_password",
-		created_at: new Date(),
-		updated_at: new Date()
+		createdAt: new Date(),
+		updatedAt: new Date()
 	};
 
 	const signInData = {
@@ -38,7 +38,7 @@ describe("SignInService", () => {
 				{
 					provide: BCryptAdapter,
 					useValue: {
-						hashCompare: jest.fn().mockResolvedValueOnce(true)
+						hashCompare: jest.fn().mockResolvedValue(true)
 					}
 				},
 				{
@@ -68,7 +68,7 @@ describe("SignInService", () => {
 		await expect(promise).rejects.toThrow();
 	});
 
-	it("should return null if loadUserByEmail find a user", async () => {
+	it("should return null if loadUserByEmail dont find an user", async () => {
 		jest.spyOn(databaseStub, "loadUserByEmail").mockResolvedValueOnce(null);
 		const result = await sut.execute(signInData);
 		expect(result).toBeNull();
@@ -78,5 +78,11 @@ describe("SignInService", () => {
 		const spyHash = jest.spyOn(hashServiceStub, "hashCompare");
 		await sut.execute(signInData);
 		expect(spyHash).toHaveBeenCalledWith(signInData.password, fakeUser.password);
+	});
+
+	it("should return null if hashCompare fail", async () => {
+		jest.spyOn(hashServiceStub, "hashCompare").mockResolvedValueOnce(false);
+		const result = await sut.execute(signInData);
+		expect(result).toBeNull();
 	});
 });
