@@ -80,6 +80,12 @@ describe("SignInService", () => {
 		expect(spyHash).toHaveBeenCalledWith(signInData.password, fakeUser.password);
 	});
 
+	it("should throw if hashCompare throws", async () => {
+		jest.spyOn(hashServiceStub, "hashCompare").mockRejectedValueOnce(new Error());
+		const promise = sut.execute(signInData);
+		await expect(promise).rejects.toThrow();
+	});
+
 	it("should return null if hashCompare fail", async () => {
 		jest.spyOn(hashServiceStub, "hashCompare").mockResolvedValueOnce(false);
 		const result = await sut.execute(signInData);
