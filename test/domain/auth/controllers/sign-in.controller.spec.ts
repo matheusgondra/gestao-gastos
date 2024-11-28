@@ -30,6 +30,12 @@ describe("SignIn Controller", () => {
 		signinServiceStub = module.get(SignInService);
 	});
 
+	it("should call execute with correct params", async () => {
+		const executeSpy = jest.spyOn(signinServiceStub, "execute");
+		await sut.handle(signInRequestDTO);
+		expect(executeSpy).toHaveBeenCalledWith(signInRequestDTO);
+	});
+
 	it("should return 404 if execute return null", async () => {
 		jest.spyOn(signinServiceStub, "execute").mockResolvedValueOnce(null);
 		const promise = sut.handle(signInRequestDTO);
