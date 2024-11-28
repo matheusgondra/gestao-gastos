@@ -73,4 +73,10 @@ describe("SignInService", () => {
 		const result = await sut.execute(signInData);
 		expect(result).toBeNull();
 	});
+
+	it("should call hashCompare with correct params", async () => {
+		const spyHash = jest.spyOn(hashServiceStub, "hashCompare");
+		await sut.execute(signInData);
+		expect(spyHash).toHaveBeenCalledWith(signInData.password, fakeUser.password);
+	});
 });
