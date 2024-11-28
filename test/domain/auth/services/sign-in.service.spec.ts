@@ -103,4 +103,9 @@ describe("SignInService", () => {
 		const promise = sut.execute(signInData);
 		await expect(promise).rejects.toThrow();
 	});
+
+	it("should return an accessToken on success", async () => {
+		const result = await sut.execute(signInData);
+		expect(result).toEqual("any_access_token");
+	});
 });
