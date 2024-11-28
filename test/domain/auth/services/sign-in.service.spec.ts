@@ -44,7 +44,7 @@ describe("SignInService", () => {
 				{
 					provide: JwtService,
 					useValue: {
-						signAsync: jest.fn().mockResolvedValueOnce("any_access_token")
+						signAsync: jest.fn().mockResolvedValue("any_access_token")
 					}
 				}
 			]
@@ -96,5 +96,11 @@ describe("SignInService", () => {
 		const spySignAsync = jest.spyOn(tokenServiceStub, "signAsync");
 		await sut.execute(signInData);
 		expect(spySignAsync).toHaveBeenCalledWith({ userId: fakeUser.id });
+	});
+
+	it("should throw if signAsync throws", async () => {
+		jest.spyOn(tokenServiceStub, "signAsync").mockRejectedValueOnce(new Error());
+		const promise = sut.execute(signInData);
+		await expect(promise).rejects.toThrow();
 	});
 });
