@@ -1,6 +1,6 @@
 import { Body, ConflictException, Controller, Post } from "@nestjs/common";
 import { SignUpRequestDTO, SignUpResponseDTO } from "../dto";
-import { SignUpService } from "../services/signup.service";
+import { SignUpService } from "../services";
 import { Public } from "../constants/constants";
 
 @Controller("signup")
