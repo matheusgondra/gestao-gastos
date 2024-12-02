@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
 		]);
 
 		if (isPublic) {
-			return Promise.resolve(true);
+			return true;
 		}
 
 		const request = context.switchToHttp().getRequest();
@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
 			throw new UnauthorizedException("Invalid token");
 		}
 
-		return Promise.resolve(true);
+		return true;
 	}
 
 	private extractTokenFromHeader(request: Request): string | undefined {
