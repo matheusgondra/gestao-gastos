@@ -61,7 +61,15 @@ describe("Bcrypt Adapter", () => {
 
 		it("should return true if hashCompare on success", async () => {
 			const result = await sut.hashCompare("any_value", "any_hash");
-			expect(result).toBeTruthy();
+			expect(result).toBe(true);
+		});
+
+		it("should return false if hashCompare fail", async () => {
+			jest.spyOn(bcrypt, "compare").mockImplementationOnce(() => {
+				return false;
+			});
+			const result = await sut.hashCompare("invalid_value", "any_hash");
+			expect(result).toBe(false);
 		});
 
 		it("should throw if hashCompare throws", async () => {
