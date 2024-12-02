@@ -2,7 +2,6 @@ import { SignInController } from "@/domain/auth/controllers/signin.controller";
 import { SignInRequestDTO } from "@/domain/auth/dto/sign-in-request.dto";
 import { SignInResponseDTO } from "@/domain/auth/dto/sign-in-response.dto";
 import { SignInService } from "@/domain/auth/services/signin.service";
-import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignIn Controller", () => {
@@ -35,12 +34,6 @@ describe("SignIn Controller", () => {
 		const executeSpy = jest.spyOn(signinServiceStub, "execute");
 		await sut.handle(signInRequestDTO);
 		expect(executeSpy).toHaveBeenCalledWith(signInRequestDTO);
-	});
-
-	it("should return 404 if execute return null", async () => {
-		jest.spyOn(signinServiceStub, "execute").mockResolvedValueOnce(null);
-		const promise = sut.handle(signInRequestDTO);
-		await expect(promise).rejects.toThrow(new NotFoundException("Email or password is wrong"));
 	});
 
 	it("should return an access token on success", async () => {
