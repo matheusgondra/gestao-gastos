@@ -1,6 +1,7 @@
 import { SignInService } from "@/domain/auth/services/signin.service";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
 import { UserRepository, UserResult } from "@/infra/database/repositories/user.repository";
+import { NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 
@@ -63,15 +64,15 @@ describe("SignInService", () => {
 	});
 
 	it("should throws if loadUserByEmail throws", async () => {
-		jest.spyOn(databaseStub, "loadUserByEmail").mockRejectedValue(new Error());
+		jest.spyOn(databaseStub, "loadUserByEmail").mockRejectedValueOnce(new Error());
 		const promise = sut.execute(signInData);
 		await expect(promise).rejects.toThrow();
 	});
 
-	it("should return null if loadUserByEmail dont find an user", async () => {
+	it("should return 404 if loadUserByEmail dont find an user", async () => {
 		jest.spyOn(databaseStub, "loadUserByEmail").mockResolvedValueOnce(null);
-		const result = await sut.execute(signInData);
-		expect(result).toBeNull();
+		const promise = sut.execute(signInData);
+		await expect(promise).rejects.toThrow(new NotFoundException("Email or password are not found!"));
 	});
 
 	it("should call hashCompare with correct params", async () => {
@@ -86,10 +87,11 @@ describe("SignInService", () => {
 		await expect(promise).rejects.toThrow();
 	});
 
-	it("should return null if hashCompare fail", async () => {
+	it("should return 404 if hashCompare fail", async () => {
+		jest.spyOn(databaseStub, "loadUserByEmail");
 		jest.spyOn(hashServiceStub, "hashCompare").mockResolvedValueOnce(false);
-		const result = await sut.execute(signInData);
-		expect(result).toBeNull();
+		const promise = sut.execute(signInData);
+		await expect(promise).rejects.toThrow(new NotFoundException("Email or password are not found!"));
 	});
 
 	it("should call signAsync with correct param", async () => {
