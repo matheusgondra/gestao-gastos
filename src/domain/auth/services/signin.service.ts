@@ -1,6 +1,6 @@
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
 import { UserRepository } from "@/infra/database/repositories/user.repository";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SignInRequestDTO } from "../dto";
 
@@ -15,12 +15,12 @@ export class SignInService {
 	async execute(data: SignInRequestDTO): Promise<string> {
 		const user = await this.database.loadUserByEmail(data.email);
 		if (!user) {
-			return null;
+			throw new NotFoundException("Email or password are not found!");
 		}
 
 		const isValid = await this.hashService.hashCompare(data.password, user.password);
 		if (!isValid) {
-			return null;
+			throw new NotFoundException("Email or password are not found!");
 		}
 
 		const accessToken = await this.tokenService.signAsync({ userId: user.id });
