@@ -10,4 +10,9 @@ export class BCryptAdapter {
 		const salt = this.configService.get<number>("SALT");
 		return bcrypt.hash(value, Number(salt));
 	}
+
+	async hashCompare(value: string, hash: string): Promise<boolean> {
+		const isValid = await bcrypt.compare(value, hash);
+		return isValid;
+	}
 }
