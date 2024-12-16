@@ -1,5 +1,7 @@
 import { AddIncomeRequestDTO } from "@/domain/income/dto/add-income-request.dto";
+import { Income } from "@/domain/income/entities/income.entity";
 import { AddIncomeService } from "@/domain/income/services/add-income.service";
+import { IncomeRepositoryEntity } from "@/infra/database/entities/income.entity";
 import { IncomeRepository } from "@/infra/database/repositories/income.repository";
 import { Test } from "@nestjs/testing";
 
@@ -12,6 +14,20 @@ describe("AddIncomeService", () => {
 		description: "any_description",
 		date: new Date("2021-01-01")
 	};
+	const fakeIncome: IncomeRepositoryEntity = {
+		id: "any_id",
+		value: 10000,
+		description: "any_description",
+		date: new Date("2021-01-01"),
+		createdAt: new Date(),
+		updatedAt: new Date()
+	};
+	const fakeIncomeDomain: Income = {
+		id: "any_id",
+		value: 100.0,
+		description: "any_description",
+		date: new Date("2021-01-01")
+	};
 
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
@@ -20,7 +36,7 @@ describe("AddIncomeService", () => {
 				{
 					provide: IncomeRepository,
 					useValue: {
-						add: jest.fn()
+						add: jest.fn().mockResolvedValue(fakeIncome)
 					}
 				}
 			]
@@ -40,5 +56,10 @@ describe("AddIncomeService", () => {
 		jest.spyOn(repository, "add").mockRejectedValueOnce(new Error());
 		const promise = sut.execute(requestDTO);
 		await expect(promise).rejects.toThrow();
+	});
+
+	it("should return the income on success", async () => {
+		const response = await sut.execute(requestDTO);
+		expect(response).toEqual(fakeIncomeDomain);
 	});
 });
