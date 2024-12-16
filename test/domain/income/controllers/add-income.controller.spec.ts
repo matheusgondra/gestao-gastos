@@ -1,6 +1,8 @@
 import { AuthGuard } from "@/domain/auth/auth.guard";
 import { AddIncomeController } from "@/domain/income/controllers/add-income.controller";
 import { AddIncomeRequestDTO } from "@/domain/income/dto/add-income-request.dto";
+import { AddIncomeResponseDTO } from "@/domain/income/dto/add-income-response.dto";
+import { Income } from "@/domain/income/entities/income.entity";
 import { AddIncomeService } from "@/domain/income/services/add-income.service";
 import { Test } from "@nestjs/testing";
 
@@ -13,6 +15,12 @@ describe("AddIncomeController", () => {
 		description: "any_description",
 		date: new Date("2021-01-01")
 	};
+	const fakeIncome: Income = {
+		id: "any_id",
+		value: 100,
+		description: "any_description",
+		date: new Date("2021-01-01")
+	};
 
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
@@ -21,7 +29,7 @@ describe("AddIncomeController", () => {
 				{
 					provide: AddIncomeService,
 					useValue: {
-						execute: jest.fn()
+						execute: jest.fn().mockResolvedValue(fakeIncome)
 					}
 				}
 			]
@@ -48,5 +56,10 @@ describe("AddIncomeController", () => {
 		jest.spyOn(addIncomeService, "execute").mockRejectedValueOnce(new Error());
 		const promise = sut.handle(requestDTO);
 		await expect(promise).rejects.toThrow();
+	});
+
+	it("should return the income on success", async () => {
+		const response = await sut.handle(requestDTO);
+		expect(response).toEqual(new AddIncomeResponseDTO(fakeIncome));
 	});
 });
