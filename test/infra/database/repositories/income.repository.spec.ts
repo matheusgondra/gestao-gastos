@@ -1,4 +1,5 @@
 import { Income } from "@/domain/income/entities/income.entity";
+import { IncomeRepositoryEntity } from "@/infra/database/entities/income.entity";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { IncomeRepository } from "@/infra/database/repositories/income.repository";
 import { Test } from "@nestjs/testing";
@@ -14,6 +15,14 @@ describe("IncomeRepository", () => {
 		date: new Date("2021-01-01")
 	};
 	const fakeUserId = "any_user_id";
+	const fakeIncomeRepositoryEntity: IncomeRepositoryEntity = {
+		id: "any_id",
+		value: 10000,
+		description: "any_description",
+		date: new Date("2021-01-01"),
+		createdAt: new Date(),
+		updatedAt: new Date()
+	};
 
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
@@ -23,7 +32,7 @@ describe("IncomeRepository", () => {
 					provide: PrismaService,
 					useValue: {
 						income: {
-							create: jest.fn()
+							create: jest.fn().mockResolvedValue(fakeIncomeRepositoryEntity)
 						}
 					}
 				}
@@ -51,5 +60,10 @@ describe("IncomeRepository", () => {
 		jest.spyOn(prismaServiceStub.income, "create").mockRejectedValueOnce(new Error());
 		const promise = sut.add(fakeIncome, fakeUserId);
 		await expect(promise).rejects.toThrow(new Error());
+	});
+
+	it("should return income on success", async () => {
+		const result = await sut.add(fakeIncome, fakeUserId);
+		expect(result).toEqual(fakeIncomeRepositoryEntity);
 	});
 });
