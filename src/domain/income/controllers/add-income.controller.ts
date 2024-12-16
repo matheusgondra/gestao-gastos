@@ -7,8 +7,8 @@ import { AddIncomeResponseDTO } from "../dto/add-income-response.dto";
 export class AddIncomeController {
 	constructor(private readonly service: AddIncomeService) {}
 
-	async handle(request: AddIncomeRequestDTO): Promise<AddIncomeResponseDTO> {
-		const income = await this.service.execute(request);
+	async handle(request: AddIncomeRequestDTO, userId: string): Promise<AddIncomeResponseDTO> {
+		const income = await this.service.execute(request, userId);
 		return new AddIncomeResponseDTO(income);
 	}
 }

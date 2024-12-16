@@ -15,6 +15,7 @@ describe("AddIncomeController", () => {
 		description: "any_description",
 		date: new Date("2021-01-01")
 	};
+	const fakeUserId = "any_user_id";
 	const fakeIncome: Income = {
 		id: "any_id",
 		value: 100,
@@ -46,20 +47,20 @@ describe("AddIncomeController", () => {
 		addIncomeService = module.get(AddIncomeService);
 	});
 
-	it("should call AddIncomeService with correct value", async () => {
+	it("should call AddIncomeService with correct values", async () => {
 		const executeSpy = jest.spyOn(addIncomeService, "execute");
-		await sut.handle(requestDTO);
-		expect(executeSpy).toHaveBeenCalledWith(requestDTO);
+		await sut.handle(requestDTO, fakeUserId);
+		expect(executeSpy).toHaveBeenCalledWith(requestDTO, fakeUserId);
 	});
 
 	it("should throw if AddIncomeService throws", async () => {
 		jest.spyOn(addIncomeService, "execute").mockRejectedValueOnce(new Error());
-		const promise = sut.handle(requestDTO);
+		const promise = sut.handle(requestDTO, fakeUserId);
 		await expect(promise).rejects.toThrow();
 	});
 
 	it("should return the income on success", async () => {
-		const response = await sut.handle(requestDTO);
+		const response = await sut.handle(requestDTO, fakeUserId);
 		expect(response).toEqual(new AddIncomeResponseDTO(fakeIncome));
 	});
 });

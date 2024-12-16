@@ -8,9 +8,9 @@ import { IncomeMapper } from "../mappers/income.mapper";
 export class AddIncomeService {
 	constructor(private readonly repository: IncomeRepository) {}
 
-	async execute(dto: AddIncomeRequestDTO): Promise<Income> {
+	async execute(dto: AddIncomeRequestDTO, userId: string): Promise<Income> {
 		const income = IncomeMapper.parse(dto);
-		const incomeCreated = await this.repository.add(income);
+		const incomeCreated = await this.repository.add(income, userId);
 		return IncomeMapper.toDomain(incomeCreated);
 	}
 }
