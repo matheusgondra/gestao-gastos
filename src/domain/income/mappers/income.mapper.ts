@@ -10,4 +10,13 @@ export class IncomeMapper {
 			date: entity.date
 		};
 	}
+
+	static parse({ value, date, description }: { value: number; description: string; date: Date }): Income {
+		return {
+			id: undefined,
+			value: value * 100,
+			description,
+			date
+		};
+	}
 }

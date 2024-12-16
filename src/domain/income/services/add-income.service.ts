@@ -9,7 +9,8 @@ export class AddIncomeService {
 	constructor(private readonly repository: IncomeRepository) {}
 
 	async execute(dto: AddIncomeRequestDTO): Promise<Income> {
-		const income = await this.repository.add({ ...dto, value: dto.value * 100 });
-		return IncomeMapper.toDomain(income);
+		const income = IncomeMapper.parse(dto);
+		const incomeCreated = await this.repository.add(income);
+		return IncomeMapper.toDomain(incomeCreated);
 	}
 }

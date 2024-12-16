@@ -4,7 +4,7 @@ import { IncomeRepositoryEntity } from "../entities/income.entity";
 
 @Injectable()
 export class IncomeRepository {
-	async add(income: Omit<Income, "id">): Promise<IncomeRepositoryEntity> {
+	async add(income: Income): Promise<IncomeRepositoryEntity> {
 		return null;
 	}
 }
