@@ -43,4 +43,10 @@ describe("AddIncomeController", () => {
 		await sut.handle(requestDTO);
 		expect(executeSpy).toHaveBeenCalledWith(requestDTO);
 	});
+
+	it("should throw if AddIncomeService throws", async () => {
+		jest.spyOn(addIncomeService, "execute").mockRejectedValueOnce(new Error());
+		const promise = sut.handle(requestDTO);
+		await expect(promise).rejects.toThrow();
+	});
 });
