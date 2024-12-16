@@ -46,4 +46,10 @@ describe("IncomeRepository", () => {
 			}
 		});
 	});
+
+	it("should throw if PrismaService throws", async () => {
+		jest.spyOn(prismaServiceStub.income, "create").mockRejectedValueOnce(new Error());
+		const promise = sut.add(fakeIncome, fakeUserId);
+		await expect(promise).rejects.toThrow(new Error());
+	});
 });
