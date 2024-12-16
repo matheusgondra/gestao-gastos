@@ -35,4 +35,10 @@ describe("AddIncomeService", () => {
 		await sut.execute(requestDTO);
 		expect(addSpy).toHaveBeenCalledWith({ ...requestDTO, value: requestDTO.value * 100 });
 	});
+
+	it("should throw if IncomeRepository throws", async () => {
+		jest.spyOn(repository, "add").mockRejectedValueOnce(new Error());
+		const promise = sut.execute(requestDTO);
+		await expect(promise).rejects.toThrow();
+	});
 });
