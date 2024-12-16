@@ -1,5 +1,6 @@
 import { User } from "@/domain/user/entities/user.entity";
 import { Injectable } from "@nestjs/common";
+import { UserRepositoryEntity } from "../entities/user.entity";
 import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
@@ -15,21 +16,11 @@ export class UserRepository {
 		return user;
 	}
 
-	async loadUserByEmail(email: string): Promise<UserResult> {
+	async loadUserByEmail(email: string): Promise<UserRepositoryEntity> {
 		const user = await this.database.user.findUnique({ where: { email } });
 		if (!user) {
 			return null;
 		}
 		return user;
 	}
-}
-
-export interface UserResult {
-	id: string;
-	firstName: string;
-	lastName: string;
-	password: string;
-	email: string;
-	createdAt: Date;
-	updatedAt: Date;
 }
