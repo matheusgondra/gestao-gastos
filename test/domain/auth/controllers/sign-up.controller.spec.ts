@@ -3,11 +3,8 @@ import { SignUpRequestDTO, SignUpResponseDTO } from "@/domain/auth/dto";
 import { SignUpService } from "@/domain/auth/services/signup.service";
 import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { PrismaHelper } from "@test/helpers/prisma.helper";
 
 describe("SignUp Controller", () => {
-	const prismaHelper = new PrismaHelper();
-
 	let sut: SignUpController;
 	let signupServiceStub: SignUpService;
 
@@ -17,10 +14,6 @@ describe("SignUp Controller", () => {
 		email: "any_email",
 		password: "any_password"
 	};
-
-	beforeAll(async () => {
-		await prismaHelper.connect();
-	});
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -37,12 +30,6 @@ describe("SignUp Controller", () => {
 
 		sut = module.get(SignUpController);
 		signupServiceStub = module.get(SignUpService);
-
-		await prismaHelper.getPrismaClient().user.deleteMany({});
-	});
-
-	afterAll(async () => {
-		await prismaHelper.disconnect();
 	});
 
 	it("should call execute with correct params", async () => {
