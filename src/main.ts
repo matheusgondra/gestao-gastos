@@ -19,6 +19,7 @@ async function bootstrap() {
 		.setTitle("Gestão de Gastos")
 		.setDescription("API para gestão de gastos")
 		.setVersion("1.0")
+		.addBearerAuth()
 		.addTag("Income")
 		.addTag("Auth")
 		.build();
