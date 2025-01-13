@@ -3,15 +3,16 @@ import { SignUpController } from "@/domain/auth/controllers/signup.controller";
 import { SignUpService } from "@/domain/auth/services/signup.service";
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
-import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
+import { PrismaHelper } from "@test/helpers/prisma.helper";
 import * as request from "supertest";
 
 describe("Sign Up Controller (E2E)", () => {
 	let app: INestApplication;
-	let prismaService: PrismaService;
+
+	const prismaHelper = new PrismaHelper();
 
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
@@ -25,7 +26,6 @@ describe("Sign Up Controller (E2E)", () => {
 			providers: [SignUpService]
 		}).compile();
 
-		prismaService = module.get<PrismaService>(PrismaService);
 		app = module.createNestApplication();
 		app.useGlobalPipes(
 			new ValidationPipe({
@@ -33,14 +33,17 @@ describe("Sign Up Controller (E2E)", () => {
 				transform: true
 			})
 		);
+
+		await prismaHelper.connect();
 		await app.init();
 	});
 
 	beforeEach(async () => {
-		await prismaService.user.deleteMany();
+		await prismaHelper.getPrismaClient().user.deleteMany();
 	});
 
 	afterAll(async () => {
+		await prismaHelper.disconnect();
 		await app.close();
 	});
 

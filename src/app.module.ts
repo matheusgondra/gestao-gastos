@@ -5,12 +5,14 @@ import { CryptographyModule } from "./infra/cryptography/cryptography.module";
 import { DatabaseModule } from "./infra/database/database.module";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./domain/auth/auth.guard";
+import { IncomeModule } from "./domain/income/income.module";
 @Module({
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
 		DatabaseModule,
 		CryptographyModule,
-		AuthModule
+		AuthModule,
+		IncomeModule
 	],
 	providers: [
 		{

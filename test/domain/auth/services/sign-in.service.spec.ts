@@ -1,6 +1,7 @@
 import { SignInService } from "@/domain/auth/services/signin.service";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
-import { UserRepository, UserResult } from "@/infra/database/repositories/user.repository";
+import { UserRepositoryEntity } from "@/infra/database/entities/user.entity";
+import { UserRepository } from "@/infra/database/repositories/user.repository";
 import { NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -11,7 +12,7 @@ describe("SignInService", () => {
 	let hashServiceStub: BCryptAdapter;
 	let tokenServiceStub: JwtService;
 
-	const fakeUser: UserResult = {
+	const fakeUser: UserRepositoryEntity = {
 		id: "any_id",
 		firstName: "any_first_name",
 		lastName: "any_last_name",
