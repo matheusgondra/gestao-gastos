@@ -1,4 +1,5 @@
-import { Body, ConflictException, Controller, Post } from "@nestjs/common";
+import { SignUp } from "@/domain/use-cases";
+import { Body, ConflictException, Controller, Inject, Post } from "@nestjs/common";
 import {
 	ApiConflictResponse,
 	ApiCreatedResponse,
@@ -8,12 +9,14 @@ import {
 } from "@nestjs/swagger";
 import { Public } from "../constants/constants";
 import { SignUpRequestDTO, SignUpResponseDTO } from "../dto";
-import { SignUpService } from "../services";
 
 @ApiTags("Auth")
 @Controller("signup")
 export class SignUpController {
-	constructor(private readonly service: SignUpService) {}
+	constructor(
+		@Inject("SignUp")
+		private readonly service: SignUp
+	) {}
 
 	@ApiOperation({ summary: "Sign up" })
 	@ApiCreatedResponse({ description: "Account created successfully", type: SignUpResponseDTO })

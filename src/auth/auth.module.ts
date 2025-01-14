@@ -1,12 +1,12 @@
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { Module } from "@nestjs/common";
-import { SignUpController } from "./controllers/signup.controller";
-import { SignUpService } from "./services/signup.service";
-import { SignInService } from "./services/signin.service";
 import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./constants/constants";
 import { SignInController } from "./controllers/signin.controller";
+import { SignUpController } from "./controllers/signup.controller";
+import { SignInService } from "./services/signin.service";
+import { SignUpService } from "./services/signup.service";
 
 @Module({
 	imports: [
@@ -19,6 +19,12 @@ import { SignInController } from "./controllers/signin.controller";
 		CryptographyModule
 	],
 	controllers: [SignUpController, SignInController],
-	providers: [SignUpService, SignInService]
+	providers: [
+		{
+			provide: "SignUp",
+			useClass: SignUpService
+		},
+		SignInService
+	]
 })
 export class AuthModule {}

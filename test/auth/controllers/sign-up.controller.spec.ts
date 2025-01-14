@@ -1,14 +1,21 @@
 import { SignUpController } from "@/auth/controllers/signup.controller";
 import { SignUpRequestDTO, SignUpResponseDTO } from "@/auth/dto";
-import { SignUpService } from "@/auth/services/signup.service";
+import { User } from "@/domain/entities";
+import { SignUp } from "@/domain/use-cases";
 import { ConflictException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignUp Controller", () => {
 	let sut: SignUpController;
-	let signupServiceStub: SignUpService;
+	let signUpStub: SignUp;
 
 	const signUpRequestDTO: SignUpRequestDTO = {
+		firstName: "any_first_name",
+		lastName: "any_last_name",
+		email: "any_email",
+		password: "any_password"
+	};
+	const fakeUser: User = {
 		firstName: "any_first_name",
 		lastName: "any_last_name",
 		email: "any_email",
@@ -20,26 +27,26 @@ describe("SignUp Controller", () => {
 			controllers: [SignUpController],
 			providers: [
 				{
-					provide: SignUpService,
+					provide: "SignUp",
 					useValue: {
-						execute: jest.fn().mockResolvedValue({ message: "Account created successfully" })
+						execute: jest.fn().mockResolvedValue(fakeUser)
 					}
 				}
 			]
 		}).compile();
 
 		sut = module.get(SignUpController);
-		signupServiceStub = module.get(SignUpService);
+		signUpStub = module.get<SignUp>("SignUp");
 	});
 
 	it("should call execute with correct params", async () => {
-		const executeSpy = jest.spyOn(signupServiceStub, "execute");
+		const executeSpy = jest.spyOn(signUpStub, "execute");
 		await sut.handle(signUpRequestDTO);
 		expect(executeSpy).toHaveBeenCalledWith(signUpRequestDTO);
 	});
 
 	it("should return 409 if execute returns null", async () => {
-		jest.spyOn(signupServiceStub, "execute").mockResolvedValueOnce(null);
+		jest.spyOn(signUpStub, "execute").mockResolvedValueOnce(null);
 		const promise = sut.handle(signUpRequestDTO);
 		await expect(promise).rejects.toThrow(new ConflictException("User already exists"));
 	});
