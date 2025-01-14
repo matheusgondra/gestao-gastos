@@ -1,7 +1,7 @@
 import { AppModule } from "@/app.module";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
-import { Test } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
 import { PrismaHelper } from "@test/helpers/prisma.helper";
+import { TestBuilder } from "@test/helpers/test.builder";
 import * as request from "supertest";
 
 describe("AddIncomeController E2E", () => {
@@ -11,15 +11,8 @@ describe("AddIncomeController E2E", () => {
 	const prismaHelper = new PrismaHelper();
 
 	beforeAll(async () => {
-		const module = await Test.createTestingModule({
-			imports: [AppModule]
-		}).compile();
-
-		app = module.createNestApplication();
-		app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
 		await prismaHelper.connect();
-		await app.init();
+		app = await TestBuilder.builder().setImports([AppModule]).buildE2E();
 
 		await request(app.getHttpServer())
 			.post("/signup")

@@ -1,10 +1,10 @@
 import { AuthModule } from "@/auth/auth.module";
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { Test } from "@nestjs/testing";
 import { PrismaHelper } from "@test/helpers/prisma.helper";
+import { TestBuilder } from "@test/helpers/test.builder";
 import * as request from "supertest";
 
 describe("SignIn Controller E2E", () => {
@@ -13,25 +13,16 @@ describe("SignIn Controller E2E", () => {
 	const prismaHelper = new PrismaHelper();
 
 	beforeAll(async () => {
-		const module = await Test.createTestingModule({
-			imports: [
+		await prismaHelper.connect();
+
+		app = await TestBuilder.builder()
+			.setImports([
 				ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
 				DatabaseModule,
 				AuthModule,
 				CryptographyModule
-			]
-		}).compile();
-
-		app = module.createNestApplication();
-		app.useGlobalPipes(
-			new ValidationPipe({
-				whitelist: true,
-				transform: true
-			})
-		);
-
-		await prismaHelper.connect();
-		await app.init();
+			])
+			.buildE2E();
 	});
 
 	afterEach(async () => {

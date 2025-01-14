@@ -3,7 +3,7 @@ import { SignUpRequestDTO, SignUpResponseDTO } from "@/auth/dto";
 import { User } from "@/domain/entities";
 import { SignUp } from "@/domain/use-cases";
 import { ConflictException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
+import { TestBuilder } from "@test/helpers/test.builder";
 
 describe("SignUp Controller", () => {
 	let sut: SignUpController;
@@ -23,17 +23,17 @@ describe("SignUp Controller", () => {
 	};
 
 	beforeEach(async () => {
-		const module: TestingModule = await Test.createTestingModule({
-			controllers: [SignUpController],
-			providers: [
+		const module = await TestBuilder.builder()
+			.setControllers([SignUpController])
+			.setProviders([
 				{
 					provide: "SignUp",
 					useValue: {
 						execute: jest.fn().mockResolvedValue(fakeUser)
 					}
 				}
-			]
-		}).compile();
+			])
+			.build();
 
 		sut = module.get(SignUpController);
 		signUpStub = module.get<SignUp>("SignUp");

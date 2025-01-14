@@ -2,7 +2,7 @@ import { SignInController } from "@/auth/controllers/signin.controller";
 import { SignInRequestDTO } from "@/auth/dto/sign-in-request.dto";
 import { SignInResponseDTO } from "@/auth/dto/sign-in-response.dto";
 import { SignIn } from "@/domain/use-cases";
-import { Test, TestingModule } from "@nestjs/testing";
+import { TestBuilder } from "@test/helpers/test.builder";
 
 describe("SignIn Controller", () => {
 	let sut: SignInController;
@@ -14,17 +14,17 @@ describe("SignIn Controller", () => {
 	};
 
 	beforeEach(async () => {
-		const module: TestingModule = await Test.createTestingModule({
-			controllers: [SignInController],
-			providers: [
+		const module = await TestBuilder.builder()
+			.setControllers([SignInController])
+			.setProviders([
 				{
 					provide: "SignIn",
 					useValue: {
 						execute: jest.fn().mockResolvedValue("any_access_token")
 					}
 				}
-			]
-		}).compile();
+			])
+			.build();
 
 		sut = module.get(SignInController);
 		signInStub = module.get<SignIn>("SignIn");

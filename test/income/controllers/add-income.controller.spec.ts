@@ -4,7 +4,7 @@ import { AddIncome } from "@/domain/use-cases/income/add-income";
 import { AddIncomeController } from "@/income/controllers/add-income.controller";
 import { AddIncomeRequestDTO } from "@/income/dto/add-income-request.dto";
 import { AddIncomeResponseDTO } from "@/income/dto/add-income-response.dto";
-import { Test } from "@nestjs/testing";
+import { TestBuilder } from "@test/helpers/test.builder";
 
 describe("AddIncomeController", () => {
 	let sut: AddIncomeController;
@@ -24,24 +24,22 @@ describe("AddIncomeController", () => {
 	};
 
 	beforeEach(async () => {
-		const module = await Test.createTestingModule({
-			controllers: [AddIncomeController],
-			providers: [
+		const module = await TestBuilder.builder()
+			.setControllers([AddIncomeController])
+			.setProviders([
 				{
 					provide: "AddIncome",
 					useValue: {
 						execute: jest.fn().mockResolvedValue(fakeIncome)
 					}
 				}
-			]
-		})
-			.overrideGuard(AuthGuard)
-			.useValue({
+			])
+			.overrideGuard(AuthGuard, {
 				canActivate() {
 					return true;
 				}
 			})
-			.compile();
+			.build();
 
 		sut = module.get(AddIncomeController);
 		addIncomeStub = module.get<AddIncome>("AddIncome");
