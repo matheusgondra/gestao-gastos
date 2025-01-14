@@ -1,4 +1,4 @@
-import { Income } from "@/domain/income/entities/income.entity";
+import { Income } from "@/income/entities/income.entity";
 import { IncomeRepositoryEntity } from "@/infra/database/entities/income.entity";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { IncomeRepository } from "@/infra/database/repositories/income.repository";

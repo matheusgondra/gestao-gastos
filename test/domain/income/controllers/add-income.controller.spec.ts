@@ -1,9 +1,9 @@
-import { AuthGuard } from "@/domain/auth/auth.guard";
-import { AddIncomeController } from "@/domain/income/controllers/add-income.controller";
-import { AddIncomeRequestDTO } from "@/domain/income/dto/add-income-request.dto";
-import { AddIncomeResponseDTO } from "@/domain/income/dto/add-income-response.dto";
-import { Income } from "@/domain/income/entities/income.entity";
-import { AddIncomeService } from "@/domain/income/services/add-income.service";
+import { AuthGuard } from "@/auth/auth.guard";
+import { AddIncomeController } from "@/income/controllers/add-income.controller";
+import { AddIncomeRequestDTO } from "@/income/dto/add-income-request.dto";
+import { AddIncomeResponseDTO } from "@/income/dto/add-income-response.dto";
+import { Income } from "@/income/entities/income.entity";
+import { AddIncomeService } from "@/income/services/add-income.service";
 import { Test } from "@nestjs/testing";
 
 describe("AddIncomeController", () => {

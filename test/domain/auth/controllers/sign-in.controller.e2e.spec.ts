@@ -1,6 +1,6 @@
-import { AuthModule } from "@/domain/auth/auth.module";
-import { SignInController } from "@/domain/auth/controllers/signin.controller";
-import { SignInService } from "@/domain/auth/services/signin.service";
+import { AuthModule } from "@/auth/auth.module";
+import { SignInController } from "@/auth/controllers/signin.controller";
+import { SignInService } from "@/auth/services/signin.service";
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { INestApplication, ValidationPipe } from "@nestjs/common";

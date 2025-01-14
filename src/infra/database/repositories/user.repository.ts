@@ -1,4 +1,4 @@
-import { User } from "@/domain/user/entities/user.entity";
+import { User } from "@/user/entities/user.entity";
 import { Injectable } from "@nestjs/common";
 import { UserRepositoryEntity } from "../entities/user.entity";
 import { PrismaService } from "../prisma/prisma.service";

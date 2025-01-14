@@ -1,4 +1,4 @@
-import { UserId } from "@/domain/user/decorators/user-id.decorator";
+import { UserId } from "@/user/decorators/user-id.decorator";
 import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
 import {
 	ApiBadRequestResponse,

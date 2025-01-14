@@ -1,4 +1,4 @@
-import { SignUpService } from "@/domain/auth/services/signup.service";
+import { SignUpService } from "@/auth/services/signup.service";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
 import { UserRepository } from "@/infra/database/repositories/user.repository";
 import { Test, TestingModule } from "@nestjs/testing";

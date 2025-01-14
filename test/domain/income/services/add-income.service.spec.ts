@@ -1,6 +1,6 @@
-import { AddIncomeRequestDTO } from "@/domain/income/dto/add-income-request.dto";
-import { Income } from "@/domain/income/entities/income.entity";
-import { AddIncomeService } from "@/domain/income/services/add-income.service";
+import { AddIncomeRequestDTO } from "@/income/dto/add-income-request.dto";
+import { Income } from "@/income/entities/income.entity";
+import { AddIncomeService } from "@/income/services/add-income.service";
 import { IncomeRepositoryEntity } from "@/infra/database/entities/income.entity";
 import { IncomeRepository } from "@/infra/database/repositories/income.repository";
 import { Test } from "@nestjs/testing";

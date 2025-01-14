@@ -1,7 +1,7 @@
-import { SignInController } from "@/domain/auth/controllers/signin.controller";
-import { SignInRequestDTO } from "@/domain/auth/dto/sign-in-request.dto";
-import { SignInResponseDTO } from "@/domain/auth/dto/sign-in-response.dto";
-import { SignInService } from "@/domain/auth/services/signin.service";
+import { SignInController } from "@/auth/controllers/signin.controller";
+import { SignInRequestDTO } from "@/auth/dto/sign-in-request.dto";
+import { SignInResponseDTO } from "@/auth/dto/sign-in-response.dto";
+import { SignInService } from "@/auth/services/signin.service";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignIn Controller", () => {

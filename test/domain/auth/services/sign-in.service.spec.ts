@@ -1,4 +1,4 @@
-import { SignInService } from "@/domain/auth/services/signin.service";
+import { SignInService } from "@/auth/services/signin.service";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
 import { UserRepositoryEntity } from "@/infra/database/entities/user.entity";
 import { UserRepository } from "@/infra/database/repositories/user.repository";
