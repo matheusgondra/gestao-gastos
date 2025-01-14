@@ -1,4 +1,4 @@
-import { User } from "@/user/entities/user.entity";
+import { User } from "@/domain/entities/user.entity";
 import { BCryptAdapter } from "@/infra/cryptography/bcrypt.adapter";
 import { UserRepository } from "@/infra/database/repositories/user.repository";
 import { Injectable } from "@nestjs/common";
