@@ -1,4 +1,5 @@
-import { Body, Controller, NotFoundException, Post } from "@nestjs/common";
+import { SignIn } from "@/domain/use-cases";
+import { Body, Controller, Inject, NotFoundException, Post } from "@nestjs/common";
 import {
 	ApiInternalServerErrorResponse,
 	ApiNotFoundResponse,
@@ -8,12 +9,14 @@ import {
 } from "@nestjs/swagger";
 import { Public } from "../constants/constants";
 import { SignInRequestDTO, SignInResponseDTO } from "../dto";
-import { SignInService } from "../services";
 
 @ApiTags("Auth")
 @Controller("signin")
 export class SignInController {
-	constructor(private readonly service: SignInService) {}
+	constructor(
+		@Inject("SignIn")
+		private readonly service: SignIn
+	) {}
 
 	@ApiOperation({ summary: "Sign in" })
 	@ApiOkResponse({ description: "Access token", type: SignInResponseDTO })

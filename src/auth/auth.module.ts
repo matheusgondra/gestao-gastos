@@ -24,7 +24,10 @@ import { SignUpService } from "./services/signup.service";
 			provide: "SignUp",
 			useClass: SignUpService
 		},
-		SignInService
+		{
+			provide: "SignIn",
+			useClass: SignInService
+		}
 	]
 })
 export class AuthModule {}

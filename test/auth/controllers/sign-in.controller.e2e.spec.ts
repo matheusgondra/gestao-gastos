@@ -1,6 +1,4 @@
 import { AuthModule } from "@/auth/auth.module";
-import { SignInController } from "@/auth/controllers/signin.controller";
-import { SignInService } from "@/auth/services/signin.service";
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
@@ -16,14 +14,12 @@ describe("SignIn Controller E2E", () => {
 
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
-			controllers: [SignInController],
 			imports: [
 				ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
 				DatabaseModule,
 				AuthModule,
 				CryptographyModule
-			],
-			providers: [SignInService]
+			]
 		}).compile();
 
 		app = module.createNestApplication();

@@ -1,12 +1,12 @@
 import { SignInController } from "@/auth/controllers/signin.controller";
 import { SignInRequestDTO } from "@/auth/dto/sign-in-request.dto";
 import { SignInResponseDTO } from "@/auth/dto/sign-in-response.dto";
-import { SignInService } from "@/auth/services/signin.service";
+import { SignIn } from "@/domain/use-cases";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("SignIn Controller", () => {
 	let sut: SignInController;
-	let signinServiceStub: SignInService;
+	let signInStub: SignIn;
 
 	const signInRequestDTO: SignInRequestDTO = {
 		email: "any_email",
@@ -18,20 +18,20 @@ describe("SignIn Controller", () => {
 			controllers: [SignInController],
 			providers: [
 				{
-					provide: SignInService,
+					provide: "SignIn",
 					useValue: {
-						execute: jest.fn().mockResolvedValue({ token: "any_access_token" })
+						execute: jest.fn().mockResolvedValue("any_access_token")
 					}
 				}
 			]
 		}).compile();
 
 		sut = module.get(SignInController);
-		signinServiceStub = module.get(SignInService);
+		signInStub = module.get<SignIn>("SignIn");
 	});
 
 	it("should call execute with correct params", async () => {
-		const executeSpy = jest.spyOn(signinServiceStub, "execute");
+		const executeSpy = jest.spyOn(signInStub, "execute");
 		await sut.handle(signInRequestDTO);
 		expect(executeSpy).toHaveBeenCalledWith(signInRequestDTO);
 	});
