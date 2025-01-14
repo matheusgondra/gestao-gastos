@@ -1,14 +1,14 @@
 import { AuthGuard } from "@/auth/auth.guard";
+import { Income } from "@/domain/entities/income.entity";
+import { AddIncome } from "@/domain/use-cases/income/add-income";
 import { AddIncomeController } from "@/income/controllers/add-income.controller";
 import { AddIncomeRequestDTO } from "@/income/dto/add-income-request.dto";
 import { AddIncomeResponseDTO } from "@/income/dto/add-income-response.dto";
-import { Income } from "@/income/entities/income.entity";
-import { AddIncomeService } from "@/income/services/add-income.service";
 import { Test } from "@nestjs/testing";
 
 describe("AddIncomeController", () => {
 	let sut: AddIncomeController;
-	let addIncomeService: AddIncomeService;
+	let addIncomeStub: AddIncome;
 
 	const requestDTO: AddIncomeRequestDTO = {
 		value: 100.0,
@@ -28,7 +28,7 @@ describe("AddIncomeController", () => {
 			controllers: [AddIncomeController],
 			providers: [
 				{
-					provide: AddIncomeService,
+					provide: "AddIncome",
 					useValue: {
 						execute: jest.fn().mockResolvedValue(fakeIncome)
 					}
@@ -44,17 +44,17 @@ describe("AddIncomeController", () => {
 			.compile();
 
 		sut = module.get(AddIncomeController);
-		addIncomeService = module.get(AddIncomeService);
+		addIncomeStub = module.get<AddIncome>("AddIncome");
 	});
 
 	it("should call AddIncomeService with correct values", async () => {
-		const executeSpy = jest.spyOn(addIncomeService, "execute");
+		const executeSpy = jest.spyOn(addIncomeStub, "execute");
 		await sut.handle(requestDTO, fakeUserId);
 		expect(executeSpy).toHaveBeenCalledWith(requestDTO, fakeUserId);
 	});
 
 	it("should throw if AddIncomeService throws", async () => {
-		jest.spyOn(addIncomeService, "execute").mockRejectedValueOnce(new Error());
+		jest.spyOn(addIncomeStub, "execute").mockRejectedValueOnce(new Error());
 		const promise = sut.handle(requestDTO, fakeUserId);
 		await expect(promise).rejects.toThrow();
 	});

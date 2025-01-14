@@ -1,5 +1,6 @@
+import { AddIncome } from "@/domain/use-cases/income/add-income";
 import { UserId } from "@/user/decorators/user-id.decorator";
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Inject, Post } from "@nestjs/common";
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
@@ -10,13 +11,15 @@ import {
 } from "@nestjs/swagger";
 import { AddIncomeRequestDTO } from "../dto/add-income-request.dto";
 import { AddIncomeResponseDTO } from "../dto/add-income-response.dto";
-import { AddIncomeService } from "../services/add-income.service";
 
 @ApiBearerAuth()
 @ApiTags("Income")
 @Controller("income")
 export class AddIncomeController {
-	constructor(private readonly service: AddIncomeService) {}
+	constructor(
+		@Inject("AddIncome")
+		private readonly service: AddIncome
+	) {}
 
 	@ApiOperation({ summary: "Add new income" })
 	@ApiCreatedResponse({ description: "Income created", type: AddIncomeResponseDTO })

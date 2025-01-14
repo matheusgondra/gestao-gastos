@@ -1,5 +1,5 @@
 import { IncomeRepositoryEntity } from "@/infra/database/entities/income.entity";
-import { Income } from "../entities/income.entity";
+import { Income } from "../../domain/entities/income.entity";
 
 export class IncomeMapper {
 	static toDomain(entity: IncomeRepositoryEntity): Income {

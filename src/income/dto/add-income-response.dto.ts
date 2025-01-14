@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Income } from "../entities/income.entity";
+import { Income } from "../../domain/entities/income.entity";
 
 export class AddIncomeResponseDTO {
 	@ApiProperty({ description: "Income ID", example: "ddf2d0c3-a844-4235-a3ba-cf50516ef824" })
