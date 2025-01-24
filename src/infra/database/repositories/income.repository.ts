@@ -1,4 +1,4 @@
-import { Income } from "@/domain/income/entities/income.entity";
+import { Income } from "@/domain/entities/income.entity";
 import { IncomeRepositoryMapper } from "@/infra/mappers/income-repository.mapper";
 import { Injectable } from "@nestjs/common";
 import { IncomeRepositoryEntity } from "../entities/income.entity";
